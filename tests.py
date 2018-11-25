@@ -1,5 +1,5 @@
 import unittest
-from routes import get_start_coordinates, parse_command, process_path
+from routes import get_start_coordinates, parse_command, process_route
 
 class TestRoutes(unittest.TestCase):
     """
@@ -39,18 +39,20 @@ class TestRoutes(unittest.TestCase):
         #not existing landmark
         self.assertRaises(ValueError, parse_command, *(0,0, "W", "GO parkour"))
 
-    def test_process_path(self):
+    def test_process_route(self):
         """
-        Test function process_path.
+        Test function process_route.
         """
         routes_data = {
-                  "1": ["1,2", "GO 5 N", "GO 4 W", "TURN left", "GO 120"],
+                  "1": [""],
                   "2": ["136,20", "GO 10 S", "TURN right", "GO 100", "GO 12 W"]
                 }
-        self.assertEqual(process_path(routes_data, '2'), (248, 10))
+        self.assertEqual(process_route(routes_data, '2'), (248, 10))
 
         #wrong route id
-        self.assertRaises(ValueError, process_path, *(routes_data, 'wrong route id'))
+        self.assertRaises(ValueError, process_route, *(routes_data, 'wrong route id'))
+        #corrupted data
+        self.assertRaises(ValueError, process_route, *(routes_data, '1'))
 
 if __name__ == '__main__':
     unittest.main()
