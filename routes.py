@@ -1,10 +1,11 @@
 import re, json
 import sys, getopt
+
 COORDINATES_REGEX = "^(\d+),(\d+)$"
 COMMAND_REGEX = "^(GO) ([0-9]+)$|^(GO) ([0-9]+) (E|W|N|S)$|^(GO) ([a-z]+)$|^(GO) ([a-z]+) (E|W|N|S)$" \
                 "|^(TURN) (left|right)$" # one of "GO 500", "GO 500 E", "GO park", "GO park N", "TURN left"
 LANDMARKS_DICT = {"park": (5,10), "cafe": (10,10), "school": (10,15)}
-DIRECTIONS = {"N": ("E", "W"), "W": ("N", "S"), "S": ("E", "W"), "E": ("N", "S")}
+TURNS = {"N": ("E", "W"), "W": ("N", "S"), "S": ("E", "W"), "E": ("N", "S")}
 
 def get_start_coordinates(start_point_text):
     """
@@ -60,18 +61,18 @@ def parse_command(x, y, direction, command):
         elif direction is "S":
             y -= distance
         if x < 0 or y < 0:
-            raise ValueError("Route must not go out of grid, current coordinates are {}".format(x, y))
+            raise ValueError(f"Route must not go out of grid, current coordinates are {x}, {y}")
     else:
         #change direction
         if direction is None:
             raise ValueError("You cannot change direction in first place.")
         if command_items[1] == 'left':
-            direction = DIRECTIONS[direction][0]
+            direction = TURNS[direction][0]
         else:
-            direction = DIRECTIONS[direction][1]
+            direction = TURNS[direction][1]
     return x, y, direction
 
-def process_path(routes_data, route_id):
+def process_route(routes_data, route_id):
     """
     This is main processor that triggers other functions
     :param routes_data: routes dict loaded from json file
@@ -112,7 +113,7 @@ def main(argv):
     #open file
     with open(filepath) as data_file:
         routes_data = json.load(data_file)
-    process_path(routes_data, route)
+    process_route(routes_data, route)
 
 if __name__ == "__main__":
    main(sys.argv[1:])

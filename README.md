@@ -30,7 +30,7 @@ Domain Specific Language
 ========================
 Upload file is a dictionary where keys must be unique Route IDs, 
 values are lists of instructions written in DSL. 
-DSL has two commands:
+DSL has 3 commands:
 1. "Start" is represented by the very first coordinates couple e.g `1,2` says that routes starts from x=1, y=2 coordinates.
 2. "Go" is identified with "GO" at the beginning. The second item must be distance to move. It may be represented either 
 by number of blocks to move or by a landmark to reach. Finally, it may contain direction, one of "N"(North), "W"(West), "S"(South), "E"(East).
@@ -41,7 +41,9 @@ See file routes_example.csv in order to see some basic examples of the route lan
 
 Further Improvements
 ====================
-- Decrease memory usage. Currently all routes data is being kept in memory even though only one is calulated. 
+- Decrease memory usage. Currently all routes data is being kept in memory even though only one is calulated.
+- In order to simplify calculation preprocessing of DSL may take place, for instance, merge turns with following go setting it's direction,
+convert instructions with landmarks to instructions with blocks numbers etc. 
 - If same route would be queried multiple times, it makes sense to cache the calculation results.
 - If number of users raise and speed is not important to them, pre or post calculation may take place in order to balance resources.
 - If number of routes raise and more complex calculation is needed, for example "find the closest path to landmark" or 
